@@ -1,13 +1,13 @@
 import { getProducts } from "../../apis/products";
-import { OptionsTypeReactQuery, ParamsEndpointPagination } from "../../types";
-import { ProductsPaginationResponse } from "../../types/product";
+import { OptionsTypeReactQuery, OptionalParamsApi } from "../../types";
+import { Product, ProductsPaginationResponse } from "../../types/product";
 import { useQuery } from "react-query";
 export const useGetProducts = (
-  params: ParamsEndpointPagination,
+  params: OptionalParamsApi<Product>,
   options?: OptionsTypeReactQuery<ProductsPaginationResponse>
 ) => {
   return useQuery<ProductsPaginationResponse, Error>(
-    ["products", params.limit, params.skip],
+    ["products", params],
     async () => {
       const products = await getProducts(params);
       return products;

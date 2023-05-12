@@ -1,19 +1,34 @@
-import { Typography } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useMemo, useState } from "react";
-import MaterialReactTable, { type MRT_ColumnDef } from "material-react-table";
+import MaterialReactTable, {
+  MRT_SortingState,
+  type MRT_ColumnDef,
+} from "material-react-table";
 import { useGetProducts } from "../../hooks/api/products";
 import { Product } from "../../types/product";
-import useHandleStateUpdates from "../../hooks/useHandleStateUpdates";
 import Pagination from "@mui/material/Pagination";
+import { FilterType } from "../../types";
 const limit = 10;
+
+const getSortStateApi = <T,>(param: { id: keyof T; desc: boolean }) => ({
+  [param.id]: param.desc ? "desc" : "asc",
+});
+
 const Home = () => {
-  const [skip, setSkip] = useState(0);
-  const { data } = useGetProducts({ limit, skip });
-  const [count, setCount] = useState(0);
-  useHandleStateUpdates(data, () => {
-    if (data?.total) setCount(Math.ceil(data?.total / limit));
+  const [page, setPage] = useState(1);
+  const [sorting, setSorting] = useState<MRT_SortingState>([
+    { id: "title", desc: true },
+  ]);
+  const [filter, setFilter] = useState<FilterType<Product>>({});
+  const [filterText, setFilterText] = useState<FilterType<Product>>({});
+  const { data } = useGetProducts({
+    limit,
+    page,
+    sort: getSortStateApi(sorting[0]),
+    filter,
   });
+
   const columns = useMemo<MRT_ColumnDef<Product>[]>(
     () => [
       {
@@ -51,26 +66,62 @@ const Home = () => {
     ],
     []
   );
-
+  const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterText((filterText) => ({
+      ...filterText,
+      [e.target.name]: e.target.value,
+    }));
+  };
   return (
     <Box>
       <Typography variant="h1">Products</Typography>
+      <Stack spacing={2} direction="row" mb="20px">
+        <TextField
+          value={filterText.title}
+          name="title"
+          onChange={handleFilter}
+        />
+        <TextField
+          value={filterText.price}
+          name="price"
+          onChange={handleFilter}
+        />
+        <Button variant="contained" onClick={() => setFilter(filterText)}>
+          Search
+        </Button>
+      </Stack>
       <MaterialReactTable
+        enableSortingRemoval={false}
         columns={columns}
         data={data?.products || []}
         enableColumnActions={false}
         enableColumnFilters={false}
         enablePagination={false}
-        enableSorting={false}
+        enableMultiSort={false}
         enableBottomToolbar={false}
         enableTopToolbar={false}
         muiTableBodyRowProps={{ hover: false }}
+        manualSorting
+        state={{ sorting }}
+        onSortingChange={(params) => {
+          setPage(1);
+          setSorting(params);
+          // setFilter({});
+        }}
+        localization={{
+          unsorted: "",
+          sortByColumnAsc: "",
+          sortByColumnDesc: "",
+          sortedByColumnAsc: "",
+          sortedByColumnDesc: "",
+        }}
       />
       <Pagination
+        page={page}
         sx={{ mt: "30px", mx: "auto", maxWidth: "500px" }}
-        count={count}
-        onChange={(e, page) => {
-          setSkip((page - 1) * 10);
+        count={data?.pages || 0}
+        onChange={(e, index) => {
+          setPage(index);
         }}
       />
     </Box>

@@ -1,14 +1,14 @@
 import axios from "axios";
-import { ProductsPaginationResponse } from "../types/product";
-import { ParamsEndpointPagination } from "../types";
-
-export const getProducts = async ({
-  skip = 0,
-  limit,
-}: ParamsEndpointPagination) => {
-  const response = await axios.get<ProductsPaginationResponse>(
-    `https://dummyjson.com/products?limit=${limit}&skip=${skip}`
+import { Product } from "../types/product";
+import { OptionalParamsApi } from "../types";
+import { generateURL, getTotalAndPagesCount } from "../utils";
+export const getProducts = async (params: OptionalParamsApi<Product>) => {
+  const baseUrl = "http://localhost:3000";
+  const response = await axios.get<Product[]>(
+    generateURL(`${baseUrl}/products`, params)
   );
-
-  return response.data;
+  return {
+    products: response.data,
+    ...getTotalAndPagesCount(params.limit, response.headers["x-total-count"]),
+  };
 };
