@@ -91,23 +91,22 @@ const Home = () => {
         </Button>
       </Stack>
       <MaterialReactTable
-        enableSortingRemoval={false}
         columns={columns}
         data={data?.products || []}
         enableColumnActions={false}
         enableColumnFilters={false}
         enablePagination={false}
+        enableSortingRemoval={false}
         enableMultiSort={false}
-        enableBottomToolbar={false}
-        enableTopToolbar={false}
-        muiTableBodyRowProps={{ hover: false }}
         manualSorting
         state={{ sorting }}
         onSortingChange={(params) => {
           setPage(1);
           setSorting(params);
-          // setFilter({});
         }}
+        enableBottomToolbar={false}
+        enableTopToolbar={false}
+        muiTableBodyRowProps={{ hover: false }}
         localization={{
           unsorted: "",
           sortByColumnAsc: "",
@@ -117,8 +116,8 @@ const Home = () => {
         }}
       />
       <Pagination
-        page={page}
         sx={{ mt: "30px", mx: "auto", maxWidth: "500px" }}
+        page={page}
         count={data?.pages || 0}
         onChange={(e, index) => {
           setPage(index);

@@ -6,12 +6,19 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Grid } from "@mui/material";
+import Sidebar from "./sidebar";
 const Layout = () => {
   return (
-    <Box sx={{ width: "100vw", height: "100vh", display: "flex" }}>
-      <Box sx={{ width: "15%", height: "100%", backgroundColor: "red" }}></Box>
-      <Box sx={{ width: "85%" }}>
-        <AppBar position="static">
+    <Grid container height="100%">
+      <Grid item sx={{ width: "15%", backgroundColor: "#F1F1F2", pt: "64px" }}>
+        <Sidebar />
+      </Grid>
+      <Grid item width="85%">
+        <AppBar
+          position="static"
+          sx={{ backgroundColor: "#DADCDD", color: "#000", boxShadow: "none" }}
+        >
           <Toolbar>
             <IconButton
               size="large"
@@ -31,8 +38,8 @@ const Layout = () => {
         <Box sx={{ p: "20px" }}>
           <Outlet />
         </Box>
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
 

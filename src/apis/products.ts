@@ -3,7 +3,7 @@ import { Product } from "../types/product";
 import { OptionalParamsApi } from "../types";
 import { generateURL, getTotalAndPagesCount } from "../utils";
 export const getProducts = async (params: OptionalParamsApi<Product>) => {
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = "http://localhost:3001";
   const response = await axios.get<Product[]>(
     generateURL(`${baseUrl}/products`, params)
   );
