@@ -5,17 +5,17 @@ import MaterialReactTable, {
   MRT_SortingState,
   type MRT_ColumnDef,
 } from "material-react-table";
-import { useGetProducts } from "../../hooks/api/products";
-import { Product } from "../../types/product";
+import { useGetProducts } from "../hooks/api/products";
+import { Product } from "../types/product";
 import Pagination from "@mui/material/Pagination";
-import { FilterType } from "../../types";
+import { FilterType } from "../types";
 const limit = 10;
 
 const getSortStateApi = <T,>(param: { id: keyof T; desc: boolean }) => ({
   [param.id]: param.desc ? "desc" : "asc",
 });
 
-const Home = () => {
+const Products = () => {
   const [page, setPage] = useState(1);
   const [sorting, setSorting] = useState<MRT_SortingState>([
     { id: "title", desc: true },
@@ -127,4 +127,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Products;

@@ -4,6 +4,10 @@ export const itemsSideBar = [
     path: "/",
   },
   {
+    label: "Products",
+    path: "/products",
+  },
+  {
     label: "About",
     children: [
       {
